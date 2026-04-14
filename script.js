@@ -1,43 +1,25 @@
 let score = 0;
-let pattern = [];
-const targetSize = 50;
-const gameDuration = 30000; // 30 seconds
+document.getElementById('score').innerText = `Score: ${score}`;
 
-function generatePattern() {
-    const numberOfTargets = Math.floor(Math.random() * 5) + 1;
-    for (let i = 0; i < numberOfTargets; i++) {
-        pattern.push({ x: Math.random() * (window.innerWidth - targetSize), y: Math.random() * (window.innerHeight - targetSize) });
-    }
+function createTarget() {
+    const target = document.createElement('div');
+    target.className = 'target';
+    // Set random position (you may need to adjust these values based on your layout)
+    const topPosition = Math.floor(Math.random() * 500); // Random between 0 and 499 pixels
+    const leftPosition = Math.floor(Math.random() * 800); // Random between 0 and 799 pixels
+    target.style.top = `${topPosition}px`;
+    target.style.left = `${leftPosition}px`;
+    document.body.appendChild(target); // Add the target to the body or a container div
 }
-
-function displayPattern() {
-    const container = document.getElementById('patternDisplay');
-    container.innerHTML = ''; // Clear previous pattern
-    pattern.forEach(p => {
-        const target = document.createElement('div');
-        target.className = 'target';
-        target.style.left = `${p.x}px`;
-        target.style.top = `${p.y}px`;
-        container.appendChild(target);
-    });
-}
-
-function updateScore() {
-    score++;
-    document.getElementById('score').innerText = `Score: ${score}`;
-}
-
-document.getElementById('startButton').addEventListener('click', () => {
-    pattern = [];
-    generatePattern();
-    displayPattern();
-    setTimeout(() => {
-        const targets = document.querySelectorAll('.target');
-        targets.forEach(t => t.removeEventListener('click', updateScore));
-        alert(`Game Over! Your score is ${score}`);
-    }, gameDuration);
-});
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.target').forEach(t => t.addEventListener('click', updateScore));
+    const targets = document.querySelectorAll('.target');
+    targets.forEach(target => {
+        target.addEventListener('click', () => {
+            score++; // Increment the score by 1
+            document.getElementById('score').innerText = `Score: ${score}`; // Update the displayed score
+        });
+    });
 });
+
+setInterval(createTarget, 1000); // Create a new target every second
